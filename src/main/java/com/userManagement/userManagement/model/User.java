@@ -8,12 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "user")
+@Table(name = "user_table")
 public class User {
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    @Column(name = "id")
+    private Long id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -26,10 +26,5 @@ public class User {
 
     @Column(name = "password")
     private String password;
-
-//  @Column(name = "is_active")
-//  private Integer isActive;
-
-
 
 }
