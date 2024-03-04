@@ -41,5 +41,34 @@ public class UserServiceImpl implements UserService {
         }
         throw new UserNotFoundException(new ErrorResponse("User not found with id " + id,"100-01",false));
     }
+
+    @Override
+    public User createUser(User user) {
+        System.out.print(user);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(Long id, User updatedUser) throws UserNotFoundException {
+        User existingUser = this.userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(
+                    new ErrorResponse("User not found with id: " + id,"100-01",false)));
+
+        if (updatedUser.getFirstName() != null) {
+            existingUser.setFirstName(updatedUser.getFirstName());
+        }
+
+        if (updatedUser.getLastName() != null) {
+            existingUser.setLastName(updatedUser.getLastName());
+        }
+        if (updatedUser.getMobileNumber() != null) {
+            existingUser.setMobileNumber(updatedUser.getMobileNumber());
+        }
+        if (updatedUser.getPassword() != null) {
+            existingUser.setPassword(updatedUser.getPassword());
+        }
+
+        return userRepository.save(existingUser);
+    }
 }
 

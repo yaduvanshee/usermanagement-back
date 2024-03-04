@@ -4,10 +4,7 @@ import com.userManagement.userManagement.exception.UserNotFoundException;
 import com.userManagement.userManagement.model.User;
 import com.userManagement.userManagement.service.interfaces.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * The type User controller.
@@ -37,5 +34,17 @@ public class UserController {
     public ResponseEntity<?> getUserById(@PathVariable Long userId) throws UserNotFoundException {
         final User user = this.userService.getUserById(userId);
         return ResponseEntity.ok().body(user);
+    }
+
+    @PostMapping("/")
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        User createdUser = this.userService.createUser(user);
+        return ResponseEntity.ok().body(createdUser);
+    }
+
+    @PostMapping("/{userId}")
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User updatUser) throws UserNotFoundException {
+        User updatedUser = this.userService.updateUser(userId, updatUser);
+        return ResponseEntity.ok().body(updatedUser);
     }
 }
