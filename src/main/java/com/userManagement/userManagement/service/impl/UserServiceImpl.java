@@ -57,14 +57,20 @@ public class UserServiceImpl implements UserService {
     return userRepository.save(user);
   }
 
-  public void validateUserEmailId(String emailId) throws UserManagementException {
-    if(userRepository.existsByEmail(emailId)){
+  public void validateUserEmailId(final String emailId) throws UserManagementException {
+    if (userRepository.existsByEmail(emailId)) {
       throw new UserManagementException(
           new ErrorResponse("User already exist with email id: " + emailId,
               "100-04",
               false));
     }
+  }
 
+  public void validateUserId(final Long id) throws UserNotFoundException {
+    if (!(userRepository.existsById(id))) {
+      throw new UserNotFoundException(
+          new ErrorResponse("User not found with id: " + id, "100-01", false));
+    }
   }
 
   @Override
@@ -73,19 +79,11 @@ public class UserServiceImpl implements UserService {
         .orElseThrow(() -> new UserNotFoundException(
             new ErrorResponse("User not found with id: " + id, "100-01", false)));
 
-    if (updatedUser.getFirstName() != null) {
-      existingUser.setFirstName(updatedUser.getFirstName());
-    }
-
-    if (updatedUser.getLastName() != null) {
-      existingUser.setLastName(updatedUser.getLastName());
-    }
-    if (updatedUser.getMobileNumber() != null) {
-      existingUser.setMobileNumber(updatedUser.getMobileNumber());
-    }
-    if (updatedUser.getPassword() != null) {
-      existingUser.setPassword(updatedUser.getPassword());
-    }
+    existingUser.setFirstName(updatedUser.getFirstName());
+    existingUser.setLastName(updatedUser.getLastName());
+    existingUser.setMobileNumber(updatedUser.getMobileNumber());
+    existingUser.setEmail(updatedUser.getEmail());
+    existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
 
     return userRepository.save(existingUser);
   }

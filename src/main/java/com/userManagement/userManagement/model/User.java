@@ -52,6 +52,9 @@ public class User extends Auditable {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+
+    @NotBlank(message = "Password can not be empty")
+    @NotNull(message = "Password can not be null")
     @Column(name = "password")
     @Size(min = 8,message = "Password must be of 8 character")
     private String password;
