@@ -3,6 +3,7 @@ package com.userManagement.userManagement.service.impl;
 import com.userManagement.userManagement.dao.UserRepository;
 import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.exception.UserNotFoundException;
+import com.userManagement.userManagement.mailer.EmailHelper;
 import com.userManagement.userManagement.model.User;
 import com.userManagement.userManagement.response.ErrorResponse;
 import com.userManagement.userManagement.service.interfaces.UserService;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+  private final EmailHelper emailHelper;
   @Autowired
   private PasswordEncoder passwordEncoder;
 
@@ -25,9 +27,11 @@ public class UserServiceImpl implements UserService {
    * Instantiates a new User service.
    *
    * @param userRepository the user repository
+   * @param emailHelper
    */
-  public UserServiceImpl(UserRepository userRepository) {
+  public UserServiceImpl(UserRepository userRepository, EmailHelper emailHelper) {
     this.userRepository = userRepository;
+    this.emailHelper = emailHelper;
   }
 
   /**
@@ -50,10 +54,12 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User createUser(final User user) throws UserManagementException {
-    //validating user email id
+
     validateUserEmailId(user.getEmail());
-    //saved password in encoded format
     user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+    emailHelper.sendWelcomeMail(user.getEmail());
+
     return userRepository.save(user);
   }
 
