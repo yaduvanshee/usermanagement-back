@@ -1,5 +1,6 @@
 package com.userManagement.userManagement.model;
 
+import com.userManagement.userManagement.audit.Auditable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 
 @Getter
@@ -25,7 +27,8 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "user_table")
-public class User {
+@SuperBuilder
+public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -52,4 +55,5 @@ public class User {
     @Column(name = "password")
     @Size(min = 8,message = "Password must be of 8 character")
     private String password;
+
 }
