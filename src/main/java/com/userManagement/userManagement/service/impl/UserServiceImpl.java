@@ -58,10 +58,13 @@ public class UserServiceImpl implements UserService {
   }
 
   public void validateUserEmailId(String emailId) throws UserManagementException {
-    throw new UserManagementException(
-        new ErrorResponse("User already exist with email id: " + emailId,
-            "100-04",
-            false));
+    if(userRepository.existsByEmail(emailId)){
+      throw new UserManagementException(
+          new ErrorResponse("User already exist with email id: " + emailId,
+              "100-04",
+              false));
+    }
+
   }
 
   @Override
