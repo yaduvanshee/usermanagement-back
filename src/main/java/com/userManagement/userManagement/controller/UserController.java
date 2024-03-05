@@ -1,5 +1,6 @@
 package com.userManagement.userManagement.controller;
 
+import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.exception.UserNotFoundException;
 import com.userManagement.userManagement.model.User;
 import com.userManagement.userManagement.service.interfaces.UserService;
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody User user) throws UserManagementException {
         User createdUser = this.userService.createUser(user);
         return ResponseEntity.ok().body(createdUser);
     }
