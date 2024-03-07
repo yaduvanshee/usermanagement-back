@@ -1,5 +1,6 @@
 package com.userManagement.userManagement.security;
 
+import com.userManagement.userManagement.dao.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;

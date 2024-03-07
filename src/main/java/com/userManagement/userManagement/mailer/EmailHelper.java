@@ -1,5 +1,7 @@
 package com.userManagement.userManagement.mailer;
 
+import com.userManagement.userManagement.constants.MessageConstant;
+import com.userManagement.userManagement.errorEnum.ErrorEnum;
 import com.userManagement.userManagement.exception.EmailSendingException;
 import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.response.ErrorResponse;
@@ -19,16 +21,15 @@ public class EmailHelper {
 
     @SneakyThrows
     public void sendWelcomeMail(String recipientEmail) {
-        String subject = "Welcome to our application!";
-        String content = "Dear User,\n\nWelcome to our application!\n\nBest regards,\nYour Application Team";
-
         try {
-            emailSender.sendEmail(recipientEmail, subject, content);
+            emailSender.sendEmail(recipientEmail, MessageConstant.WELCOME_SUBJECT, MessageConstant.WELCOME_CONTENT);
         } catch (MessagingException e) {
-            ErrorResponse errorResponse = new ErrorResponse("EMAIL_SENDING_ERROR", "Error occurred while sending email.");
+            ErrorEnum error = ErrorEnum.WELCOME_EMAIL_ERROR;
+            ErrorResponse errorResponse = new ErrorResponse(error.getErrorMsg(),error.getErrorCode(), false);
             throw new EmailSendingException(errorResponse);
         } catch (UnsupportedEncodingException e) {
-            ErrorResponse errorResponse = new ErrorResponse("UNSUPPORTED_ENCODING_ERROR", "Unsupported encoding detected.");
+            ErrorEnum error = ErrorEnum.UNSUPPORTED_ENCODING_ERROR;
+            ErrorResponse errorResponse = new ErrorResponse(error.getErrorMsg(),error.getErrorCode(), false);
             throw new UserManagementException(errorResponse);
         }
     }
