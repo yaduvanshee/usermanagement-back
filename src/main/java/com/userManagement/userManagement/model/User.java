@@ -26,7 +26,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "user_table")
+@Table(name = "users")
 @SuperBuilder
 public class User extends Auditable {
     @Id

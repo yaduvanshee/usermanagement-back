@@ -1,7 +1,7 @@
 package com.userManagement.userManagement.service.impl;
 
 import com.userManagement.userManagement.dao.UserRepository;
-import com.userManagement.userManagement.errorEnum.ErrorEnum;
+import com.userManagement.userManagement.errorEnum.UserErrorEnum;
 import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.exception.UserNotFoundException;
 import com.userManagement.userManagement.mailer.EmailHelper;
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     if (optionalUser.isPresent()) {
       return optionalUser.get();
     }
-    ErrorEnum error = ErrorEnum.INVALID_USER_ID;
+    UserErrorEnum error = UserErrorEnum.INVALID_USER_ID;
     throw new UserNotFoundException(
             new ErrorResponse(error.getErrorMsg() + id, error.getErrorCode(), false));
 
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
   public void validateUserEmailId(final String emailId) throws UserManagementException {
     if (userRepository.existsByEmail(emailId)) {
-      ErrorEnum error = ErrorEnum.INVALID_EMAIL_ID;
+      UserErrorEnum error = UserErrorEnum.INVALID_EMAIL_ID;
       throw new UserManagementException(
           new ErrorResponse(error.getErrorMsg() + emailId,
               error.getErrorCode(),
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
   public void validateUserId(final Long id) throws UserNotFoundException {
     if (!(userRepository.existsById(id))) {
-      ErrorEnum error = ErrorEnum.INVALID_USER_ID;
+      UserErrorEnum error = UserErrorEnum.INVALID_USER_ID;
       throw new UserNotFoundException(
           new ErrorResponse(error.getErrorMsg() + id, error.getErrorCode(), false));
     }
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
   public User updateUser(Long id, User updatedUser) throws UserNotFoundException {
     User existingUser = this.userRepository.findById(id)
             .orElseThrow(() -> {
-              ErrorEnum error = ErrorEnum.INVALID_USER_ID;
+              UserErrorEnum error = UserErrorEnum.INVALID_USER_ID;
               return new UserNotFoundException(
                       new ErrorResponse(error.getErrorMsg() + id, error.getErrorCode(), false)
               );

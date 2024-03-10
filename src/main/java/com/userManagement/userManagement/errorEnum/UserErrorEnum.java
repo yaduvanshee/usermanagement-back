@@ -3,7 +3,7 @@ package com.userManagement.userManagement.errorEnum;
 import lombok.Getter;
 
 @Getter
-public enum ErrorEnum {
+public enum UserErrorEnum {
     INVALID_USER_ID("100-01", "Invalid user id"),
     PASSWORD_EXPIRED("100-02", "Password expired"),
     PERMISSION_DENIED("100-03", "Permission denied"),
@@ -14,7 +14,7 @@ public enum ErrorEnum {
     private final String errorCode;
     private final String errorMsg;
 
-    ErrorEnum(final String errorCode, final String errorMsg) {
+    UserErrorEnum(final String errorCode, final String errorMsg) {
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;
     }

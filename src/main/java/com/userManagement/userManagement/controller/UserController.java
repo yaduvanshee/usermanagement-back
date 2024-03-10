@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * The type User controller.
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
     private final UserService userService;
 
@@ -37,12 +37,14 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
+    //TODO remove password from response
     @PostMapping("/")
     public ResponseEntity<?> createUser(@RequestBody User user) throws UserManagementException {
         User createdUser = this.userService.createUser(user);
         return ResponseEntity.ok().body(createdUser);
     }
 
+    //TODO remove password from response
     @PutMapping("/{userId}")
     public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User updatUser) throws UserNotFoundException {
         User updatedUser = this.userService.updateUser(userId, updatUser);

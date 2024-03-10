@@ -1,7 +1,8 @@
 package com.userManagement.userManagement.mailer;
 
 import com.userManagement.userManagement.constants.MessageConstant;
-import com.userManagement.userManagement.errorEnum.ErrorEnum;
+import com.userManagement.userManagement.errorEnum.AddressErrorEnum;
+import com.userManagement.userManagement.errorEnum.UserErrorEnum;
 import com.userManagement.userManagement.exception.EmailSendingException;
 import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.response.ErrorResponse;
@@ -24,11 +25,26 @@ public class EmailHelper {
         try {
             emailSender.sendEmail(recipientEmail, MessageConstant.WELCOME_SUBJECT, MessageConstant.WELCOME_CONTENT);
         } catch (MessagingException e) {
-            ErrorEnum error = ErrorEnum.WELCOME_EMAIL_ERROR;
+            UserErrorEnum error = UserErrorEnum.WELCOME_EMAIL_ERROR;
             ErrorResponse errorResponse = new ErrorResponse(error.getErrorMsg(),error.getErrorCode(), false);
             throw new EmailSendingException(errorResponse);
         } catch (UnsupportedEncodingException e) {
-            ErrorEnum error = ErrorEnum.UNSUPPORTED_ENCODING_ERROR;
+            UserErrorEnum error = UserErrorEnum.UNSUPPORTED_ENCODING_ERROR;
+            ErrorResponse errorResponse = new ErrorResponse(error.getErrorMsg(),error.getErrorCode(), false);
+            throw new UserManagementException(errorResponse);
+        }
+    }
+
+    @SneakyThrows
+    public void sendAddressChange(String recipientEmail) {
+        try {
+            emailSender.sendEmail(recipientEmail, MessageConstant.USER_ADDRESS_CHANGE_SUBJECT, MessageConstant.USER_ADDRESS_CHANGE_CONTENT);
+        } catch (MessagingException e) {
+            AddressErrorEnum error = AddressErrorEnum.ADDRESS_EMAIL_ERROR;
+            ErrorResponse errorResponse = new ErrorResponse(error.getErrorMsg(),error.getErrorCode(), false);
+            throw new EmailSendingException(errorResponse);
+        } catch (UnsupportedEncodingException e) {
+            UserErrorEnum error = UserErrorEnum.UNSUPPORTED_ENCODING_ERROR;
             ErrorResponse errorResponse = new ErrorResponse(error.getErrorMsg(),error.getErrorCode(), false);
             throw new UserManagementException(errorResponse);
         }
