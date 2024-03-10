@@ -1,6 +1,6 @@
 package com.userManagement.userManagement.security;
 
-
+import com.userManagement.userManagement.dao.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -33,7 +33,7 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth ->
-            auth.requestMatchers("/user/**").permitAll())
+            auth.requestMatchers("/user/**").authenticated())
         .httpBasic(Customizer.withDefaults());
     return http.build();
   }
