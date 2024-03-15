@@ -24,7 +24,6 @@ if psql -h "$HOST" -p "$PORT" -U core_api_user -d user_management -f "$SQL_FILE"
     echo "Tables created successfully"
 else
     echo "Failed to create tables"
-    dropdb -h "$HOST" -p "$PORT" -U core_api_user user_management
     exit 1
 fi
 
