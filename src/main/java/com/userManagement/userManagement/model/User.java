@@ -29,7 +29,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(name = "user_table")
+@Table(name = "users")
 @SuperBuilder
 public class User extends Auditable implements UserDetails {
     @Id
