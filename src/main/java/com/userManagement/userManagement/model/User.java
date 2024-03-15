@@ -49,8 +49,8 @@ public class User extends Auditable implements UserDetails {
     @Email
     private String email;
 
-    @NotBlank(message = "Invalid Phone number: Empty number")
-    @NotNull(message = "Invalid Phone number: Number is NULL")
+//    @NotBlank(message = "Invalid Phone number: Empty number")
+//    @NotNull(message = "Invalid Phone number: Number is NULL")
     @Pattern(regexp = "^\\d{10}$", message = "Invalid phone number")
     @Column(name = "mobile_number")
     private String mobileNumber;
