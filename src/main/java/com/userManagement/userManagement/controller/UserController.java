@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * The type User controller.
  */
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/user")
 public class UserController {
     private final UserService userService;
 
@@ -31,7 +31,7 @@ public class UserController {
      * @return ResponseEntity with HTTP status 200 (OK) and the user information if found.
      * @throws UserNotFoundException if the user with the specified ID is not found.
      */
-    @GetMapping("/{userId}")
+    @GetMapping("/get/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable Long userId) throws UserNotFoundException {
         final User user = this.userService.getUserById(userId);
         return ResponseEntity.ok().body(user);
