@@ -3,7 +3,6 @@ package com.userManagement.userManagement.exception;
 import com.userManagement.userManagement.response.ErrorResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;

@@ -31,13 +31,13 @@ public class UserController {
      * @return ResponseEntity with HTTP status 200 (OK) and the user information if found.
      * @throws UserNotFoundException if the user with the specified ID is not found.
      */
-    @GetMapping("/{userId}")
+    @GetMapping("/get/{userId}")
     public ResponseEntity<?> getUserById(@PathVariable Long userId) throws UserNotFoundException {
         final User user = this.userService.getUserById(userId);
         return ResponseEntity.ok().body(user);
     }
 
-    @PostMapping("/")
+    @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody User user) throws UserManagementException {
         User createdUser = this.userService.createUser(user);
         return ResponseEntity.ok().body(createdUser);

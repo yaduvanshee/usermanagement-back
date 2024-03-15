@@ -1,10 +1,8 @@
 package com.userManagement.userManagement.service.impl;
 
 import com.userManagement.userManagement.dao.UserRepository;
-import com.userManagement.userManagement.errorEnum.ErrorEnum;
 import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.exception.UserNotFoundException;
-import com.userManagement.userManagement.mailer.EmailHelper;
 import com.userManagement.userManagement.model.User;
 import com.userManagement.userManagement.response.ErrorResponse;
 import com.userManagement.userManagement.service.interfaces.UserService;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
-  private final EmailHelper emailHelper;
   @Autowired
   private PasswordEncoder passwordEncoder;
 
@@ -28,11 +25,9 @@ public class UserServiceImpl implements UserService {
    * Instantiates a new User service.
    *
    * @param userRepository the user repository
-   * @param emailHelper
    */
-  public UserServiceImpl(UserRepository userRepository, EmailHelper emailHelper) {
+  public UserServiceImpl(UserRepository userRepository) {
     this.userRepository = userRepository;
-    this.emailHelper = emailHelper;
   }
 
   /**
@@ -49,50 +44,41 @@ public class UserServiceImpl implements UserService {
     if (optionalUser.isPresent()) {
       return optionalUser.get();
     }
-    ErrorEnum error = ErrorEnum.INVALID_USER_ID;
     throw new UserNotFoundException(
-            new ErrorResponse(error.getErrorMsg() + id, error.getErrorCode(), false));
-
+        new ErrorResponse("User not found with id " + id, "100-01", false));
   }
 
   @Override
   public User createUser(final User user) throws UserManagementException {
-
+    //validating user email id
     validateUserEmailId(user.getEmail());
+    //saved password in encoded format
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-    emailHelper.sendWelcomeMail(user.getEmail());
-
     return userRepository.save(user);
   }
 
   public void validateUserEmailId(final String emailId) throws UserManagementException {
     if (userRepository.existsByEmail(emailId)) {
-      ErrorEnum error = ErrorEnum.INVALID_EMAIL_ID;
       throw new UserManagementException(
-          new ErrorResponse(error.getErrorMsg() + emailId,
-              error.getErrorCode(),
+          new ErrorResponse("User already exist with email id: " + emailId,
+              "100-04",
               false));
     }
   }
 
   public void validateUserId(final Long id) throws UserNotFoundException {
     if (!(userRepository.existsById(id))) {
-      ErrorEnum error = ErrorEnum.INVALID_USER_ID;
       throw new UserNotFoundException(
-          new ErrorResponse(error.getErrorMsg() + id, error.getErrorCode(), false));
+          new ErrorResponse("User not found with id: " + id, "100-01", false));
     }
   }
 
   @Override
   public User updateUser(Long id, User updatedUser) throws UserNotFoundException {
     User existingUser = this.userRepository.findById(id)
-            .orElseThrow(() -> {
-              ErrorEnum error = ErrorEnum.INVALID_USER_ID;
-              return new UserNotFoundException(
-                      new ErrorResponse(error.getErrorMsg() + id, error.getErrorCode(), false)
-              );
-            });
+        .orElseThrow(() -> new UserNotFoundException(
+            new ErrorResponse("User not found with id: " + id, "100-01", false)));
+
     existingUser.setFirstName(updatedUser.getFirstName());
     existingUser.setLastName(updatedUser.getLastName());
     existingUser.setMobileNumber(updatedUser.getMobileNumber());

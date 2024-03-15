@@ -1,13 +1,15 @@
 package com.userManagement.userManagement.security;
 
-import com.userManagement.userManagement.dao.UserRepository;
+import static org.springframework.security.config.Customizer.withDefaults;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,26 +17,38 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
+
+  @Autowired
+  private UserDetailsService userDetailsService;
+
+  @Autowired
+  private JwtAuthenticationEntryPoint point;
+
   /**
-   * Provides a bean for configuring the security filter chain.
-   * The security filter chain defines the security configuration
-   * for HTTP requests, including CSRF protection, CORS policy,
-   * request authorization rules, and HTTP basic authentication.
+   * Provides a bean for configuring the security filter chain. The security filter chain defines
+   * the security configuration for HTTP requests, including CSRF protection, CORS policy, request
+   * authorization rules, and HTTP basic authentication.
    *
-   * @param http The {@link HttpSecurity} object used to configure
-   * security settings for HTTP requests.
-   * @return A {@link SecurityFilterChain} instance representing
-   * the configured security filter chain for the application.
+   * @param http The {@link HttpSecurity} object used to configure security settings for HTTP
+   *             requests.
+   * @return A {@link SecurityFilterChain} instance representing the configured security filter
+   * chain for the application.
    * @throws Exception If an error occurs during the security configuration.
    */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
-        .cors(AbstractHttpConfigurer::disable)
+    http.csrf(csrf -> csrf.disable())
+        .cors(cors -> cors.disable())
+        .authenticationProvider(daoAuthenticationProvider())
         .authorizeHttpRequests(auth ->
-            auth.requestMatchers("/user/**").authenticated())
-        .httpBasic(Customizer.withDefaults());
+            auth.requestMatchers(HttpMethod.POST, "/user/create/**").permitAll()
+                .anyRequest().authenticated())
+        .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+        .httpBasic(withDefaults())
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     return http.build();
   }
 
@@ -50,18 +64,18 @@ public class SecurityConfig {
    * and password "12345". Passwords are encoded using the configured
    * {@link PasswordEncoder} bean to ensure security.
    */
-  @Bean
-  public UserDetailsService userDetailsService() {
-    UserDetails admin = User.builder()
-        .username("saurabh")
-        .password(passwordEncoder().encode("123"))
-        .build();
-    UserDetails admin1 = User.builder()
-        .username("saur")
-        .password(passwordEncoder().encode("12345"))
-        .build();
-    return new InMemoryUserDetailsManager(admin, admin1);
-  }
+//  @Bean
+//  public UserDetailsService userDetailsService() {
+//    UserDetails admin = User.builder()
+//        .username("saurabh")
+//        .password(passwordEncoder().encode("123"))
+//        .build();
+//    UserDetails admin1 = User.builder()
+//        .username("saur")
+//        .password(passwordEncoder().encode("12345"))
+//        .build();
+//    return new InMemoryUserDetailsManager(admin, admin1);
+//  }
 
   /**
    * Provides a bean for creating instances of a password encoder. The password encoder is used for
@@ -73,5 +87,24 @@ public class SecurityConfig {
   @Bean
   public PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
+  }
+
+  /**
+   * Provides a bean for creating a DaoAuthenticationProvider, which is a pre-defined
+   * AuthenticationProvider used to authenticate users from a database.
+   *
+   * The DaoAuthenticationProvider relies on a user details service and a password encoder
+   * to authenticate users securely. We configure this provider by registering our custom
+   * user details service and password encoder.
+   *
+   * @return A configured instance of DaoAuthenticationProvider ready for use in authenticating
+   * users against a database.
+   */
+  @Bean
+  public DaoAuthenticationProvider daoAuthenticationProvider(){
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    provider.setUserDetailsService(userDetailsService);
+    provider.setPasswordEncoder(passwordEncoder());
+    return provider;
   }
 }
