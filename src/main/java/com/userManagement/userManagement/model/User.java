@@ -13,6 +13,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,7 +33,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "users")
 @SuperBuilder
-public class User extends Auditable implements UserDetails {
+public class User extends Auditable  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -49,8 +51,6 @@ public class User extends Auditable implements UserDetails {
     @Email
     private String email;
 
-//    @NotBlank(message = "Invalid Phone number: Empty number")
-//    @NotNull(message = "Invalid Phone number: Number is NULL")
     @Pattern(regexp = "^\\d{10}$", message = "Invalid phone number")
     @Column(name = "mobile_number")
     private String mobileNumber;
@@ -62,36 +62,7 @@ public class User extends Auditable implements UserDetails {
     @Size(min = 8,message = "Password must be of 8 character")
     private String password;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
+    private Set<UserRole> roles = new HashSet<>();
 
-    @Override
-    public String getUsername() {
-        return this.email;
-    }
 
-    @Override
-    public String getPassword() { return this.password; }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

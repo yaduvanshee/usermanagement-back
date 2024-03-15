@@ -3,6 +3,7 @@ package com.userManagement.userManagement.security;
 import com.userManagement.userManagement.dao.UserRepository;
 import com.userManagement.userManagement.enums.ErrorEnum;
 import com.userManagement.userManagement.exception.UserManagementException;
+import com.userManagement.userManagement.model.CustomUserDetails;
 import com.userManagement.userManagement.model.User;
 import com.userManagement.userManagement.response.ErrorResponse;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     } catch (UserManagementException e) {
       throw new RuntimeException(e);
     }
-    return user;
+    return new CustomUserDetails(user);
   }
 }
