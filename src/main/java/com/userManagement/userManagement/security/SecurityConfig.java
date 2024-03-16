@@ -43,7 +43,7 @@ public class SecurityConfig {
         .cors(cors -> cors.disable())
         .authenticationProvider(daoAuthenticationProvider())
         .authorizeHttpRequests(auth ->
-            auth.requestMatchers(HttpMethod.POST, "/user/create/**").permitAll()
+            auth.requestMatchers(HttpMethod.POST, "/user/create").permitAll()
                 .anyRequest().authenticated())
         .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
         .httpBasic(withDefaults())

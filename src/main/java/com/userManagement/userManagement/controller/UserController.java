@@ -13,41 +13,43 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/user")
 public class UserController {
-    private final UserService userService;
 
-    /**
-     * Instantiates a new User controller.
-     *
-     * @param userService the user service
-     */
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+  private final UserService userService;
 
-    /**
-     * Retrieves a user by their unique identifier.
-     *
-     * @param userId The unique identifier of the user to retrieve.
-     * @return ResponseEntity with HTTP status 200 (OK) and the user information if found.
-     * @throws UserNotFoundException if the user with the specified ID is not found.
-     */
-    @GetMapping("/get/{userId}")
-    public ResponseEntity<?> getUserById(@PathVariable Long userId) throws UserNotFoundException {
-        final User user = this.userService.getUserById(userId);
-        return ResponseEntity.ok().body(user);
-    }
+  /**
+   * Instantiates a new User controller.
+   *
+   * @param userService the user service
+   */
+  public UserController(UserService userService) {
+    this.userService = userService;
+  }
 
-    //TODO remove password from response
-    @PostMapping("/")
-    public ResponseEntity<?> createUser(@RequestBody User user) throws UserManagementException {
-        User createdUser = this.userService.createUser(user);
-        return ResponseEntity.ok().body(createdUser);
-    }
+  /**
+   * Retrieves a user by their unique identifier.
+   *
+   * @param userId The unique identifier of the user to retrieve.
+   * @return ResponseEntity with HTTP status 200 (OK) and the user information if found.
+   * @throws UserNotFoundException if the user with the specified ID is not found.
+   */
+  @GetMapping("/get/{userId}")
+  public ResponseEntity<?> getUserById(@PathVariable Long userId) throws UserNotFoundException {
+    final User user = this.userService.getUserById(userId);
+    return ResponseEntity.ok().body(user);
+  }
 
-    //TODO remove password from response
-    @PutMapping("/{userId}")
-    public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User updatUser) throws UserNotFoundException {
-        User updatedUser = this.userService.updateUser(userId, updatUser);
-        return ResponseEntity.ok().body(updatedUser);
-    }
+  //TODO remove password from response
+  @PostMapping("/create")
+  public ResponseEntity<?> createUser(@RequestBody User user) throws UserManagementException {
+    User createdUser = this.userService.createUser(user);
+    return ResponseEntity.ok().body(createdUser);
+  }
+
+  //TODO remove password from response
+  @PutMapping("/{userId}")
+  public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User updatUser)
+      throws UserNotFoundException {
+    User updatedUser = this.userService.updateUser(userId, updatUser);
+    return ResponseEntity.ok().body(updatedUser);
+  }
 }
