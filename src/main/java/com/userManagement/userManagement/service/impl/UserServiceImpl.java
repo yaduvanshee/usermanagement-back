@@ -5,7 +5,7 @@ import com.userManagement.userManagement.errorEnum.UserErrorEnum;
 import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.exception.UserNotFoundException;
 import com.userManagement.userManagement.mailer.EmailHelper;
-import com.userManagement.userManagement.model.User;
+import com.userManagement.userManagement.model.UserInfo;
 import com.userManagement.userManagement.response.ErrorResponse;
 import com.userManagement.userManagement.service.interfaces.UserService;
 import java.util.Optional;
@@ -44,8 +44,8 @@ public class UserServiceImpl implements UserService {
    */
 
   @Override
-  public User getUserById(Long id) throws UserNotFoundException {
-    final Optional<User> optionalUser = this.userRepository.findById(id);
+  public UserInfo getUserById(Long id) throws UserNotFoundException {
+    final Optional<UserInfo> optionalUser = this.userRepository.findById(id);
     if (optionalUser.isPresent()) {
       return optionalUser.get();
     }
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User createUser(final User user) throws UserManagementException {
+  public UserInfo createUser(final UserInfo user) throws UserManagementException {
 
     validateUserEmailId(user.getEmail());
     user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -85,8 +85,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User updateUser(Long id, User updatedUser) throws UserNotFoundException {
-    User existingUser = this.userRepository.findById(id)
+  public UserInfo updateUser(Long id, UserInfo updatedUser) throws UserNotFoundException {
+    UserInfo existingUser = this.userRepository.findById(id)
             .orElseThrow(() -> {
               UserErrorEnum error = UserErrorEnum.INVALID_USER_ID;
               return new UserNotFoundException(

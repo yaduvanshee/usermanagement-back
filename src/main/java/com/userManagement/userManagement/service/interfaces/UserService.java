@@ -2,12 +2,12 @@ package com.userManagement.userManagement.service.interfaces;
 
 import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.exception.UserNotFoundException;
-import com.userManagement.userManagement.model.User;
+import com.userManagement.userManagement.model.UserInfo;
 
 public interface UserService{
-    User getUserById(Long id) throws UserNotFoundException;
+    UserInfo getUserById(Long id) throws UserNotFoundException;
 
-    User createUser(User user) throws UserManagementException;
+    UserInfo createUser(UserInfo user) throws UserManagementException;
 
-    User updateUser(Long id, User updatedUser) throws UserNotFoundException;
+    UserInfo updateUser(Long id, UserInfo updatedUser) throws UserNotFoundException;
 }

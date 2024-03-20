@@ -2,7 +2,7 @@ package com.userManagement.userManagement.controller;
 
 import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.exception.UserNotFoundException;
-import com.userManagement.userManagement.model.User;
+import com.userManagement.userManagement.model.UserInfo;
 import com.userManagement.userManagement.service.interfaces.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,22 +34,22 @@ public class UserController {
    */
   @GetMapping("/get/{userId}")
   public ResponseEntity<?> getUserById(@PathVariable Long userId) throws UserNotFoundException {
-    final User user = this.userService.getUserById(userId);
+    final UserInfo user = this.userService.getUserById(userId);
     return ResponseEntity.ok().body(user);
   }
 
   //TODO remove password from response
   @PostMapping("/create")
-  public ResponseEntity<?> createUser(@RequestBody User user) throws UserManagementException {
-    User createdUser = this.userService.createUser(user);
+  public ResponseEntity<?> createUser(@RequestBody UserInfo user) throws UserManagementException {
+    UserInfo createdUser = this.userService.createUser(user);
     return ResponseEntity.ok().body(createdUser);
   }
 
   //TODO remove password from response
   @PutMapping("/{userId}")
-  public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody User updatUser)
+  public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestBody UserInfo updatUser)
       throws UserNotFoundException {
-    User updatedUser = this.userService.updateUser(userId, updatUser);
+    UserInfo updatedUser = this.userService.updateUser(userId, updatUser);
     return ResponseEntity.ok().body(updatedUser);
   }
 }

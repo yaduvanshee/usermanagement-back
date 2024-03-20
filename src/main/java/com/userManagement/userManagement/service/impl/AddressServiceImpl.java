@@ -7,7 +7,7 @@ import com.userManagement.userManagement.exception.AddressNotFoundException;
 import com.userManagement.userManagement.exception.UserManagementException;
 import com.userManagement.userManagement.mailer.EmailHelper;
 import com.userManagement.userManagement.model.Address;
-import com.userManagement.userManagement.model.User;
+import com.userManagement.userManagement.model.UserInfo;
 import com.userManagement.userManagement.response.ErrorResponse;
 import com.userManagement.userManagement.service.interfaces.AddressService;
 import org.springframework.stereotype.Service;
@@ -65,7 +65,7 @@ public class AddressServiceImpl implements AddressService {
         existingAddress.setPostalCode(updatedAddress.getPostalCode());
         existingAddress.setCountry(updatedAddress.getCountry());
 
-        Optional<User> user = this.userRepository.findById(existingAddress.getUserId());
+        Optional<UserInfo> user = this.userRepository.findById(existingAddress.getUserId());
         emailHelper.sendAddressChange(user.get().getEmail());
 
         return addressRepository.save(existingAddress);
